@@ -95,6 +95,7 @@ fn mcps_menu(config: &Config) -> Result<()> {
 fn marketplaces_menu(config: &mut Config) -> Result<()> {
     let choices = vec![
         "Browse skills",
+        "Search skills",
         "Add marketplace",
         "Update marketplace cache",
         "List marketplaces",
@@ -106,6 +107,7 @@ fn marketplaces_menu(config: &mut Config) -> Result<()> {
 
     match selection {
         Ok("Browse skills") => market::browse::browse_marketplace(config, None)?,
+        Ok("Search skills") => market::browse::search_marketplace(config, None)?,
         Ok("Add marketplace") => {
             let repo = inquire::Text::new("Marketplace git repo URL:").prompt()?;
             market::manage::add_marketplace(config, &repo)?;

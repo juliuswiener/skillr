@@ -85,6 +85,11 @@ enum MarketAction {
         /// Search query
         query: Option<String>,
     },
+    /// Search marketplace skills by keyword, view descriptions, and install
+    Search {
+        /// Search query
+        query: Option<String>,
+    },
     /// Add a marketplace repository
     Add {
         /// Git repository URL
@@ -141,6 +146,9 @@ fn main() -> anyhow::Result<()> {
             match action {
                 MarketAction::Browse { query } => {
                     market::browse::browse_marketplace(&config, query.as_deref())?
+                }
+                MarketAction::Search { query } => {
+                    market::browse::search_marketplace(&config, query.as_deref())?
                 }
                 MarketAction::Add { repo } => {
                     market::manage::add_marketplace(&mut config, &repo)?
