@@ -5,6 +5,7 @@ mod market;
 mod mcps;
 mod skills;
 mod util;
+mod wizard;
 
 use clap::{Parser, Subcommand};
 
@@ -105,7 +106,7 @@ fn main() -> anyhow::Result<()> {
 
     match cli.command {
         None => {
-            println!("(wizard not yet implemented)");
+            wizard::run_wizard()?;
         }
         Some(Commands::Sync) => {
             let config = config::Config::load()?;
