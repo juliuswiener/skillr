@@ -1,6 +1,7 @@
 mod agents;
 mod config;
 mod lockfile;
+mod skills;
 mod util;
 
 use clap::{Parser, Subcommand};
@@ -97,7 +98,7 @@ enum MarketAction {
     },
 }
 
-fn main() {
+fn main() -> anyhow::Result<()> {
     let cli = Cli::parse();
 
     match cli.command {
@@ -105,14 +106,22 @@ fn main() {
             println!("(wizard not yet implemented)");
         }
         Some(Commands::Sync) => {
-            println!("(not yet implemented)");
+            let config = config::Config::load()?;
+            skills::sync::sync_skills(&config)?;
         }
-        Some(Commands::Skills { action }) => match action {
-            SkillsAction::List => println!("(not yet implemented)"),
-            SkillsAction::Install { .. } => println!("(not yet implemented)"),
-            SkillsAction::Remove { .. } => println!("(not yet implemented)"),
-            SkillsAction::Sync => println!("(not yet implemented)"),
-        },
+        Some(Commands::Skills { action }) => {
+            let config = config::Config::load()?;
+            match action {
+                SkillsAction::List => skills::list::print_skills_table(&config)?,
+                SkillsAction::Install { source } => {
+                    skills::install::install_skill(&config, source.as_deref())?;
+                }
+                SkillsAction::Remove { name } => {
+                    skills::remove::remove_skill(&config, name.as_deref())?;
+                }
+                SkillsAction::Sync => skills::sync::sync_skills(&config)?,
+            }
+        }
         Some(Commands::Mcps { action }) => match action {
             McpsAction::List => println!("(not yet implemented)"),
             McpsAction::Add { .. } => println!("(not yet implemented)"),
@@ -128,4 +137,6 @@ fn main() {
             MarketAction::Remove { .. } => println!("(not yet implemented)"),
         },
     }
+
+    Ok(())
 }
