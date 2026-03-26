@@ -46,7 +46,7 @@ pub fn list_marketplaces(config: &Config) -> Result<()> {
 
     let dim = Style::new().dim();
 
-    println!("{:<30} {}", "Name", "URL");
+    println!("{:<30} URL", "Name");
     println!("{}", "-".repeat(70));
 
     for m in &config.marketplaces {

@@ -83,8 +83,8 @@ pub fn sync_skills(config: &Config) -> Result<()> {
             let meta = fs::symlink_metadata(&skill_path);
 
             // Check for broken symlinks.
-            if let Ok(m) = &meta {
-                if m.file_type().is_symlink() && !skill_path.exists() {
+            if let Ok(m) = &meta
+                && m.file_type().is_symlink() && !skill_path.exists() {
                     // Broken symlink.
                     let prompt = format!(
                         "  {} Broken symlink '{}' in {}. Remove it?",
@@ -104,7 +104,6 @@ pub fn sync_skills(config: &Config) -> Result<()> {
                     }
                     continue;
                 }
-            }
 
             // Real directory not in central.
             if skill_path.is_dir() {

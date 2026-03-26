@@ -41,15 +41,14 @@ pub fn gather_skills(config: &Config) -> Result<Vec<SkillRow>> {
     if central.is_dir() {
         for entry in fs::read_dir(&central)? {
             let entry = entry?;
-            if entry.file_type()?.is_dir() {
-                if let Some(name) = entry.file_name().to_str() {
+            if entry.file_type()?.is_dir()
+                && let Some(name) = entry.file_name().to_str() {
                     all_skills.insert(name.to_string());
                 }
-            }
         }
     }
 
-    for (_id, agent) in &enabled {
+    for agent in enabled.values() {
         let agent_skills = agent.skills_path_expanded();
         if agent_skills.is_dir() {
             for entry in fs::read_dir(&agent_skills)? {

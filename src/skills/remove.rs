@@ -75,11 +75,10 @@ fn prompt_skill_name(central: &std::path::Path) -> Result<String> {
     let mut skills: Vec<String> = Vec::new();
     for entry in fs::read_dir(central)? {
         let entry = entry?;
-        if entry.file_type()?.is_dir() {
-            if let Some(name) = entry.file_name().to_str() {
+        if entry.file_type()?.is_dir()
+            && let Some(name) = entry.file_name().to_str() {
                 skills.push(name.to_string());
             }
-        }
     }
 
     if skills.is_empty() {

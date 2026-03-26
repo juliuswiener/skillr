@@ -25,7 +25,7 @@ pub fn sync_mcps(config: &Config) -> Result<()> {
         let central_for_agent = registry.servers_for_agent(agent_id);
 
         // Central MCPs missing from agent config -> offer to push.
-        for (name, _entry) in &central_for_agent {
+        for name in central_for_agent.keys() {
             if !agent_mcps.contains_key(name) {
                 let prompt = format!(
                     "  Push '{}' to {} config?",

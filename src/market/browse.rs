@@ -55,8 +55,8 @@ pub fn browse_marketplace(config: &Config, query: Option<&str>) -> Result<()> {
             .into_iter()
             .filter_map(|e| e.ok())
         {
-            if entry.file_name() == "SKILL.md" && entry.file_type().is_file() {
-                if let Ok(meta) = parse_skill_md(entry.path()) {
+            if entry.file_name() == "SKILL.md" && entry.file_type().is_file()
+                && let Ok(meta) = parse_skill_md(entry.path()) {
                     let skill_dir = entry
                         .path()
                         .parent()
@@ -70,7 +70,6 @@ pub fn browse_marketplace(config: &Config, query: Option<&str>) -> Result<()> {
                         path: skill_dir,
                     });
                 }
-            }
         }
     }
 

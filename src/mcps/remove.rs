@@ -41,7 +41,7 @@ pub fn remove_mcp(config: &Config, name: Option<&str>) -> Result<()> {
     }
 
     // Remove from each agent's config.
-    for (_id, agent) in &config.agents {
+    for agent in config.agents.values() {
         if agent.enabled {
             remove_agent_mcp(agent, &name)?;
         }

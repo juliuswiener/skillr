@@ -296,15 +296,12 @@ fn find_skill_dir(repo_dir: &Path, skill_name: &str) -> Result<PathBuf> {
 
     // Recursive search up to depth 4
     for entry in WalkDir::new(repo_dir).max_depth(4).into_iter().filter_map(|e| e.ok()) {
-        if entry.file_name() == "SKILL.md" && entry.file_type().is_file() {
-            if let Ok(meta) = parse_skill_md(entry.path()) {
-                if meta.name == skill_name {
-                    if let Some(parent) = entry.path().parent() {
+        if entry.file_name() == "SKILL.md" && entry.file_type().is_file()
+            && let Ok(meta) = parse_skill_md(entry.path())
+                && meta.name == skill_name
+                    && let Some(parent) = entry.path().parent() {
                         return Ok(parent.to_path_buf());
                     }
-                }
-            }
-        }
     }
 
     bail!("could not find skill directory for '{}'", skill_name);
