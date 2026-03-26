@@ -1,5 +1,6 @@
 mod agents;
 mod config;
+mod lockfile;
 mod util;
 
 use clap::{Parser, Subcommand};
