@@ -1,6 +1,7 @@
 mod agents;
 mod config;
 mod lockfile;
+mod mcps;
 mod skills;
 mod util;
 
@@ -108,6 +109,7 @@ fn main() -> anyhow::Result<()> {
         Some(Commands::Sync) => {
             let config = config::Config::load()?;
             skills::sync::sync_skills(&config)?;
+            mcps::sync::sync_mcps(&config)?;
         }
         Some(Commands::Skills { action }) => {
             let config = config::Config::load()?;
@@ -122,13 +124,16 @@ fn main() -> anyhow::Result<()> {
                 SkillsAction::Sync => skills::sync::sync_skills(&config)?,
             }
         }
-        Some(Commands::Mcps { action }) => match action {
-            McpsAction::List => println!("(not yet implemented)"),
-            McpsAction::Add { .. } => println!("(not yet implemented)"),
-            McpsAction::Remove { .. } => println!("(not yet implemented)"),
-            McpsAction::Sync => println!("(not yet implemented)"),
-            McpsAction::Import => println!("(not yet implemented)"),
-        },
+        Some(Commands::Mcps { action }) => {
+            let config = config::Config::load()?;
+            match action {
+                McpsAction::List => mcps::list::list_mcps(&config)?,
+                McpsAction::Add { name } => mcps::add::add_mcp(&config, name.as_deref())?,
+                McpsAction::Remove { name } => mcps::remove::remove_mcp(&config, name.as_deref())?,
+                McpsAction::Sync => mcps::sync::sync_mcps(&config)?,
+                McpsAction::Import => mcps::sync::sync_mcps(&config)?,
+            }
+        }
         Some(Commands::Market { action }) => match action {
             MarketAction::Browse { .. } => println!("(not yet implemented)"),
             MarketAction::Add { .. } => println!("(not yet implemented)"),
