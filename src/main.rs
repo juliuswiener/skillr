@@ -1,6 +1,7 @@
 mod agents;
 mod config;
 mod lockfile;
+mod market;
 mod mcps;
 mod skills;
 mod util;
@@ -134,13 +135,24 @@ fn main() -> anyhow::Result<()> {
                 McpsAction::Import => mcps::sync::sync_mcps(&config)?,
             }
         }
-        Some(Commands::Market { action }) => match action {
-            MarketAction::Browse { .. } => println!("(not yet implemented)"),
-            MarketAction::Add { .. } => println!("(not yet implemented)"),
-            MarketAction::Update => println!("(not yet implemented)"),
-            MarketAction::List => println!("(not yet implemented)"),
-            MarketAction::Remove { .. } => println!("(not yet implemented)"),
-        },
+        Some(Commands::Market { action }) => {
+            let mut config = config::Config::load()?;
+            match action {
+                MarketAction::Browse { query } => {
+                    market::browse::browse_marketplace(&config, query.as_deref())?
+                }
+                MarketAction::Add { repo } => {
+                    market::manage::add_marketplace(&mut config, &repo)?
+                }
+                MarketAction::Update => {
+                    market::cache::update_all_marketplaces(&config.marketplaces)?
+                }
+                MarketAction::List => market::manage::list_marketplaces(&config)?,
+                MarketAction::Remove { name } => {
+                    market::manage::remove_marketplace(&mut config, name.as_deref())?
+                }
+            }
+        }
     }
 
     Ok(())
